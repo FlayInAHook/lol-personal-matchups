@@ -170,17 +170,40 @@ export default function LolalyticsSummary() {
                     <HStack gap={4} align="stretch" minH="20" justifyContent={"center"}>
                       {data.map((p) => {
                         const info = champById.get(p.id.toLowerCase());
+                        // Build the Lolalytics URL for this matchup
+                        const oppSlug = (opponent || "").toLowerCase() === "monkeyking" ? "wukong" : (opponent || "").toLowerCase();
+                        const ownSlug = p.own === "monkeyking" ? "wukong" : p.own;
+                        const laneVal = (lane || "").toLowerCase();
+                        const url = `https://lolalytics.com/lol/${ownSlug}/vs/${oppSlug}/build/?lane=${laneVal}&tier=${tier}&vslane=${laneVal}&patch=30`;
                         return (
-                          <VStack key={p.key} minW="160px" maxW="36" align="center" gap={1}>
-                            {info && <Image src={info.icon} alt={info.name} boxSize={10} rounded="md" />}
-                            <Text fontWeight="medium" css={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 128 }}>{info?.name ?? p.id}</Text>
-                            <Text fontSize="xs" color="fg.muted">
-                              {label.includes("Normalized")
-                                ? (Number.isFinite(p.normalized as number) ? `Norm ${p.normalized!.toFixed(2)}%` : Number.isFinite(p.diffAvg as number) ? `Vs-avg ${p.diffAvg!.toFixed(2)}%` : "")
-                                : (Number.isFinite(p.wr as number) ? `WR ${p.wr!.toFixed(2)}%` : "")}
-                              {Number.isFinite(p.games as number) ? ` · ${p.games} games` : ""}
-                            </Text>
-                          </VStack>
+                          <a
+                            key={p.key}
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ textDecoration: "none" }}
+                          >
+                            <VStack minW="160px" maxW="36" align="center" gap={1} _hover={{ bg: "gray.50/10" }}>
+                              {info && <Image src={info.icon} alt={info.name} boxSize={10} rounded="md" />}
+                              <Text fontWeight="medium" css={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 128 }}>{info?.name ?? p.id}</Text>
+                              <Text fontSize="xs" color="fg.muted">
+                                {(() => {
+                                  if (label.includes("Normalized")) {
+                                    if (Number.isFinite(p.normalized as number)) {
+                                      return `Norm ${p.normalized!.toFixed(2)}%`;
+                                    } else if (Number.isFinite(p.diffAvg as number)) {
+                                      return `Vs-avg ${p.diffAvg!.toFixed(2)}%`;
+                                    } else {
+                                      return "";
+                                    }
+                                  } else {
+                                    return Number.isFinite(p.wr as number) ? `WR ${p.wr!.toFixed(2)}%` : "";
+                                  }
+                                })()}
+                                {Number.isFinite(p.games as number) ? ` · ${p.games} games` : ""}
+                              </Text>
+                            </VStack>
+                          </a>
                         );
                       })}
                     </HStack>
