@@ -167,7 +167,7 @@ export default function LolalyticsSummary() {
                 <VStack align="stretch" gap={2} mb={3}>
                   <Text fontSize="sm" color="fg.muted">{label}</Text>
                   <Box pb={1}>
-                    <HStack gap={4} align="stretch" minH="20" justifyContent={"center"} overflowX="auto" >
+                    <HStack gap={4} align="stretch" minH="20" overflowX="auto" >
                       {data.map((p) => {
                         const info = champById.get(p.id.toLowerCase());
                         // Build the Lolalytics URL for this matchup
