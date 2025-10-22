@@ -166,8 +166,8 @@ export default function LolalyticsSummary() {
               const Row = ({ data, label }: { data: typeof valid; label: string }) => (
                 <VStack align="stretch" gap={2} mb={3}>
                   <Text fontSize="sm" color="fg.muted">{label}</Text>
-                  <Box overflowX="auto" pb={1}>
-                    <HStack gap={4} align="stretch" minH="20" justifyContent={"center"}>
+                  <Box pb={1}>
+                    <HStack gap={4} align="stretch" minH="20" justifyContent={"center"} overflowX="auto" >
                       {data.map((p) => {
                         const info = champById.get(p.id.toLowerCase());
                         // Build the Lolalytics URL for this matchup
@@ -176,12 +176,10 @@ export default function LolalyticsSummary() {
                         const laneVal = (lane || "").toLowerCase();
                         const url = `https://lolalytics.com/lol/${ownSlug}/vs/${oppSlug}/build/?lane=${laneVal}&tier=${tier}&vslane=${laneVal}&patch=30`;
                         return (
-                          <a
+                          <div
                             key={p.key}
-                            href={url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{ textDecoration: "none" }}
+                            onClick={() => window.open(url, "_blank")}
+                            style={{ textDecoration: "none", cursor: "pointer" }}
                           >
                             <VStack minW="160px" maxW="36" align="center" gap={1} _hover={{ bg: "gray.50/10" }}>
                               {info && <Image src={info.icon} alt={info.name} boxSize={10} rounded="md" />}
@@ -203,7 +201,7 @@ export default function LolalyticsSummary() {
                                 {Number.isFinite(p.games as number) ? ` · ${p.games} games` : ""}
                               </Text>
                             </VStack>
-                          </a>
+                          </div>
                         );
                       })}
                     </HStack>
